@@ -1,9 +1,10 @@
 package AVLPesquisa;
 
-//Teste GIT+Eclipse
+
 public class Arvore<T extends Comparable<T>> {
 
-	private No<T> raiz;
+	public No<T> raiz;
+	
 
 	public boolean inserir(T valor) {
 		No<T> repetido = buscar(valor);
@@ -40,7 +41,7 @@ public class Arvore<T extends Comparable<T>> {
 		} else {
 
 			while (atual.chave.compareTo(valor) != 0) {
-				if (atual.chave.compareTo(valor) < 0) { // rever
+				if (atual.chave.compareTo(valor) < 0) {
 					atual = atual.esquerda;
 					if (atual == null) {
 						return null;
@@ -56,7 +57,8 @@ public class Arvore<T extends Comparable<T>> {
 		}
 		return atual;
 	}
-
+	
+	
 	// ------------------------ FUNCOES AUXILIARES---------------------------
 	// -------------------------------//
 

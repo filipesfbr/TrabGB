@@ -61,6 +61,7 @@ public class Programa {
 			for (int i = 0; i < array.length; i++) {
 				arvoreCpf.inserir(array[i].getCpf());
 				arvoreData.inserir(array[i].getData());
+				arvoreNome.inserir(array[i].getNome());
 			}
 		}
 	}
