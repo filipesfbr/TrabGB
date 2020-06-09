@@ -1,6 +1,6 @@
 package AVLPesquisa;
 
-
+//Teste GIT+Eclipse
 public class Arvore<T extends Comparable<T>> {
 
 	private No<T> raiz;
