@@ -52,10 +52,12 @@ public class Arvore<T extends Comparable<T>, U> {
       Arvore<T, U> direita = new Arvore<T, U>();
       direita.raiz = raiz.direita;
       No<T, U> menorMaiorDireita = direita.buscarMenorMaiorQue(valor);
-      if (null != menorMaiorDireita) {
+      
+     if (null != menorMaiorDireita) {
         return menorMaiorDireita;
       }
     }
+    
     return raiz;
   }
 	

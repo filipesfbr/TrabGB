@@ -48,7 +48,7 @@ public class Programa {
             
 
             while ((line = br.readLine()) != null)
- {
+{
 
                 if (index < array.length) {
                     String[] cols = line.split(";");
@@ -61,7 +61,7 @@ public class Programa {
 
             }
                     
-                }
+}
             for (int i = 0; i < array.length; i++) {
                 arvoreCpf.inserir(array[i].getCpf(), array[i]);
                 arvoreData.inserir(array[i].getData(), array[i]);
@@ -71,35 +71,52 @@ public class Programa {
     }
     
     public List<No<Date, Pessoa>> buscarTodosEntreDatas(Date inicio, Date fim, Arvore<Date, Pessoa> a) {
-        List<No<Date, Pessoa>> todos = new ArrayList<>();
+        List<No<Date, Pessoa>> retorno = new ArrayList<>();
         No<Date, Pessoa> atual;
         Date valorAtual = inicio;
         do  {
           atual = a.buscarMenorMaiorQue(valorAtual);
           if (null != atual && entreDatas(inicio, fim, atual.chave)) {
-            todos.add(atual);
+            retorno.add(atual);
             valorAtual = atual.chave;
           }
         } while (null != atual && entreDatas(inicio, fim, atual.chave));
-        return todos;
+        return retorno;
+      }
+    
+    public boolean entreDatas(Date inicio, Date fim, Date data) {
+        return data.compareTo(inicio) >= 0 && data.compareTo(fim) <= 0;
       }
     
     public List<No<String, Pessoa>> buscarTodosQueIniciamCom(String inicio, Arvore<String, Pessoa> a) {
-        List<No<String, Pessoa>> todos = new ArrayList<>();
+        List<No<String, Pessoa>> retorno = new ArrayList<>();
         No<String, Pessoa> atual;
         String valorAtual = inicio;
         do  {
           atual = a.buscarMenorMaiorQue(valorAtual);
           if (null != atual && atual.chave.startsWith(inicio)) {
-            todos.add(atual);
+            retorno.add(atual);
             valorAtual = atual.chave;
           }
         } while (null != atual && atual.chave.startsWith(inicio));
-        return todos;
+        return retorno;
       }
       
-      public boolean entreDatas(Date inicio, Date fim, Date data) {
-        return data.compareTo(inicio) >= 0 && data.compareTo(fim) <= 0;
-      }
-      
+    public No<String, Pessoa> buscarCpf(String valor, Arvore<String, Pessoa> arvoreCpf) {
+    	return arvoreCpf.buscar(valor);
+    }
+//    public List<No<String, Pessoa>> buscarCPF(String cpf, Arvore<String, Pessoa> a) {
+//        List<No<String, Pessoa>> retorno = new ArrayList<>();
+//        No<String, Pessoa> atual;
+//        String valorAtual = cpf;
+//        do  {
+//          atual = a.buscarMenorMaiorQue(valorAtual);
+//          if (null != atual && atual.chave.compareTo(cpf) == 0) {
+//            retorno.add(atual);
+//            valorAtual = atual.chave;
+//          }
+//        } while (null != atual && atual.chave.compareTo(cpf) != 0);
+//        return retorno;
+//      }
+//      
 }
