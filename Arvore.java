@@ -1,15 +1,14 @@
 package AVLPesquisa;
 
+public class Arvore<T extends Comparable<T>, U> {
 
-public class Arvore<T extends Comparable<T>> {
-
-	public No<T> raiz;
+	public No<T, U> raiz;
 	
 
-	public boolean inserir(T valor) {
-		No<T> repetido = buscar(valor);
+	public boolean inserir(T valor, U conteudo) {
+		No<T, U> repetido = buscar(valor);
 		if (repetido == null) {
-			raiz = inserir(valor, raiz);
+			raiz = inserir(valor, raiz, conteudo);
 			return true;
 		} else {
 			System.out.println("Valor ja consta na arvore!");
@@ -17,24 +16,54 @@ public class Arvore<T extends Comparable<T>> {
 		}
 	}
 
-	public No<T> inserir(T valor, No<T> no) {
+	public No<T, U> inserir(T valor, No<T, U> no, U conteudo) {
 		if (no == null) {
-			no = new No<T>(valor);
+			no = new No<T, U>(valor, conteudo);
 		} else if (no.chave.compareTo(valor) < 0) {
-			no.esquerda = inserir(valor, no.esquerda);
+			no.esquerda = inserir(valor, no.esquerda, conteudo);
 		} else if (no.chave.compareTo(valor) > 0) {
-			no.direita = inserir(valor, no.direita);
+			no.direita = inserir(valor, no.direita, conteudo);
 		}
 
 		no = balancear(no);
 		return no;
 	}
-
-	public No<T> buscar(T valor) {
+	
+	public No<T, U> buscarMenorMaiorQue(T valor) {
+    if (null == raiz) {
+      return null;
+    }
+    
+    if (null == raiz.esquerda && null == raiz.direita) {
+      if (raiz.chave.compareTo(valor) > 0) {
+        return raiz;
+      } else {
+        return null;
+      }
+    }
+    
+    if (raiz.chave.compareTo(valor) <= 0) {
+      Arvore<T, U> esquerda = new Arvore<T, U>();
+      esquerda.raiz = raiz.esquerda;
+      return esquerda.buscarMenorMaiorQue(valor);
+    }
+    
+    if (null != raiz.direita) {
+      Arvore<T, U> direita = new Arvore<T, U>();
+      direita.raiz = raiz.direita;
+      No<T, U> menorMaiorDireita = direita.buscarMenorMaiorQue(valor);
+      if (null != menorMaiorDireita) {
+        return menorMaiorDireita;
+      }
+    }
+    return raiz;
+  }
+	
+	public No<T, U> buscar(T valor) {
 		if (raiz == null) {
 			return null;
 		}
-		No<T> atual = raiz;
+		No<T, U> atual = raiz;
 
 		if (atual.chave.compareTo(valor) == 0) {
 			return atual;
@@ -62,7 +91,7 @@ public class Arvore<T extends Comparable<T>> {
 	// ------------------------ FUNCOES AUXILIARES---------------------------
 	// -------------------------------//
 
-	public int altura(No<T> no) {
+	public int altura(No<T, U> no) {
 		if (no == null) {
 			return -1;
 		} else {
@@ -71,11 +100,11 @@ public class Arvore<T extends Comparable<T>> {
 
 	}
 
-	public int fatorBalanceamento(No<T> no) {
+	public int fatorBalanceamento(No<T, U> no) {
 		return altura(no.esquerda) - altura(no.direita);
 	}
 
-	public No<T> balancear(No<T> no) {
+	public No<T, U> balancear(No<T, U> no) {
 		if (fatorBalanceamento(no) == 2) {
 			if (fatorBalanceamento(no.esquerda) > 0)
 				no = rotacaoDireita(no);
@@ -92,8 +121,8 @@ public class Arvore<T extends Comparable<T>> {
 	}
 
 	// ROTACAO DIREITA
-	public No<T> rotacaoDireita(No<T> no) {
-		No<T> aux = no.esquerda;
+	public No<T, U> rotacaoDireita(No<T, U> no) {
+		No<T, U> aux = no.esquerda;
 		no.esquerda = aux.direita;
 		aux.direita = no;
 		no.altura = Math.max(altura(no.esquerda), altura(no.direita)) + 1;
@@ -102,8 +131,8 @@ public class Arvore<T extends Comparable<T>> {
 	}
 
 	// ROTACAO ESQUERDA
-	public No<T> rotacaoEsquerda(No<T> no) {
-		No<T> aux = no.direita;
+	public No<T, U> rotacaoEsquerda(No<T, U> no) {
+		No<T, U> aux = no.direita;
 		no.direita = aux.esquerda;
 		aux.esquerda = no;
 		no.altura = Math.max(altura(no.esquerda), altura(no.direita)) + 1;
@@ -112,13 +141,13 @@ public class Arvore<T extends Comparable<T>> {
 	}
 
 	// DUPLA ROTACAO DIREITA
-	public No<T> duplaRotacaoDireita(No<T> no) {
+	public No<T, U> duplaRotacaoDireita(No<T, U> no) {
 		no.esquerda = rotacaoEsquerda(no.esquerda);
 		return rotacaoDireita(no);
 	}
 
 	// DUPLA ROTACAO ESQUERDA
-	public No<T> duplaRotacaoEsquerda(No<T> no) {
+	public No<T, U> duplaRotacaoEsquerda(No<T, U> no) {
 		no.direita = rotacaoDireita(no.direita);
 		return rotacaoEsquerda(no);
 	}

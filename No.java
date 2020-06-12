@@ -1,61 +1,58 @@
 package AVLPesquisa;
 
+public class No <T, U>{
 
-public class No <T extends Comparable<T>>{
+    public T chave;
+    public U conteudo;
 
-	public T chave;
-	public int [] index;
-	
-	public No<T> direita;
-	public No<T> esquerda;
-	public int altura;
-	
-	public No(T chave) {
-		this.chave = chave;
-		this.direita = this.esquerda = null;
-		this.altura = 0;
-	}
+    public No<T, U> direita;
+    public No<T, U> esquerda;
+    public int altura;
 
-	public T getChave() {
-		return chave;
-	}
+    public No(T chave, U conteudo) {
+        this.chave = chave;
+        this.conteudo = conteudo;
+        this.direita = this.esquerda = null;
+        this.altura = 0;
+    }
 
-	public void setChave(T chave) {
-		this.chave = chave;
-	}
+    public T getChave() {
+        return chave;
+    }
 
-	public int[] getIndex() {
-		return index;
-	}
+    public void setChave(T chave) {
+        this.chave = chave;
+    }
+    
+    public U getConteudo() {
+        return conteudo;
+    }
 
-	public void setIndex(int[] index) {
-		this.index = index;
-	}
+    public void setConteudo(U conteudo) {
+        this.conteudo = conteudo;
+    }
 
-	public No<T> getDireita() {
-		return direita;
-	}
+    public No<T, U> getDireita() {
+        return direita;
+    }
 
-	public void setDireita(No<T> direita) {
-		this.direita = direita;
-	}
+    public void setDireita(No<T, U> direita) {
+        this.direita = direita;
+    }
 
-	public No<T> getEsquerda() {
-		return esquerda;
-	}
+    public No<T, U> getEsquerda() {
+        return esquerda;
+    }
 
-	public void setEsquerda(No<T> esquerda) {
-		this.esquerda = esquerda;
-	}
+    public void setEsquerda(No<T, U> esquerda) {
+        this.esquerda = esquerda;
+    }
 
-	public int getAltura() {
-		return altura;
-	}
+    public int getAltura() {
+        return altura;
+    }
 
-	public void setAltura(int altura) {
-		this.altura = altura;
-	}
-	
-	
-
+    public void setAltura(int altura) {
+        this.altura = altura;
+    }
 }

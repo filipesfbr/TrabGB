@@ -7,63 +7,99 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Programa {
 
-	public Pessoa[] array;
-	public Arvore<String> arvoreNome;
-	public Arvore<String> arvoreCpf;
-	public Arvore<Date> arvoreData;
-	
+    public Pessoa[] array;
+    public Arvore<String, Pessoa> arvoreNome;
+    public Arvore<String, Pessoa> arvoreCpf;
+    public Arvore<Date, Pessoa> arvoreData;
+    
 
-	public Programa() {
-		this.arvoreNome = new Arvore<String>();
-		this.arvoreCpf = new Arvore<String>();
-		this.arvoreData = new Arvore<Date>();
-	}
+    public Programa() {
+        this.arvoreNome = new Arvore<String, Pessoa>();
+        this.arvoreCpf = new Arvore<String, Pessoa>();
+        this.arvoreData = new Arvore<Date, Pessoa>();
+    }
 
-	public int quantidadeLinhas(File file) throws FileNotFoundException, IOException {
-		int linhas = 0;
-		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-			String line;
-			while ((line = br.readLine()) != null) {
-				linhas++;
-			}
-		}
-		return linhas;
+    public int quantidadeLinhas(File file) throws FileNotFoundException, IOException {
+        int linhas = 0;
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            while ((br.readLine()) != null) {
+                linhas++;
+            }
+        }
+        return linhas;
+    }
+    
+    public Date parseDate(String data) throws ParseException {
+      SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+      return formato.parse(data);
+    }
 
-	}
+    public void carregar(File file) throws IOException, ParseException {
+        array = new Pessoa[quantidadeLinhas(file)];
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            int index = 0;
+            
 
-	public void carregar(File file) throws IOException, ParseException {
-		array = new Pessoa[quantidadeLinhas(file)];
-		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-			String line;
-			int index = 0;
-			SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            while ((line = br.readLine()) != null)
+ {
 
-			while ((line = br.readLine()) != null) {
+                if (index < array.length) {
+                    String[] cols = line.split(";");
 
-				if (index < array.length) {
-					String[] cols = line.split(";");
+                    array[index++] = new Pessoa((cols[0]), // CPF
+                            (cols[1]), // RG
+                            cols[2], // NOME
+                            (Date) parseDate(cols[3]), // DATA DE NASCIMENTO
+                            cols[4]); // CIDADE NATAL
 
-					array[index++] = new Pessoa((cols[0]), // CPF
-							(cols[1]), // RG
-							cols[2], // NOME
-							(Date) formato.parse(cols[3]), // DATA DE NASCIMENTO
-							cols[4], // CIDADE NATAL
-							index); // INDEX
-
-				}
-				
-					
-				}
-			for (int i = 0; i < array.length; i++) {
-				arvoreCpf.inserir(array[i].getCpf());
-				arvoreData.inserir(array[i].getData());
-				arvoreNome.inserir(array[i].getNome());
-			}
-		}
-	}
-	
+            }
+                    
+                }
+            for (int i = 0; i < array.length; i++) {
+                arvoreCpf.inserir(array[i].getCpf(), array[i]);
+                arvoreData.inserir(array[i].getData(), array[i]);
+                arvoreNome.inserir(array[i].getNome(), array[i]);
+            }
+        }
+    }
+    
+    public List<No<Date, Pessoa>> buscarTodosEntreDatas(Date inicio, Date fim, Arvore<Date, Pessoa> a) {
+        List<No<Date, Pessoa>> todos = new ArrayList<>();
+        No<Date, Pessoa> atual;
+        Date valorAtual = inicio;
+        do  {
+          atual = a.buscarMenorMaiorQue(valorAtual);
+          if (null != atual && entreDatas(inicio, fim, atual.chave)) {
+            todos.add(atual);
+            valorAtual = atual.chave;
+          }
+        } while (null != atual && entreDatas(inicio, fim, atual.chave));
+        return todos;
+      }
+    
+    public List<No<String, Pessoa>> buscarTodosQueIniciamCom(String inicio, Arvore<String, Pessoa> a) {
+        List<No<String, Pessoa>> todos = new ArrayList<>();
+        No<String, Pessoa> atual;
+        String valorAtual = inicio;
+        do  {
+          atual = a.buscarMenorMaiorQue(valorAtual);
+          if (null != atual && atual.chave.startsWith(inicio)) {
+            todos.add(atual);
+            valorAtual = atual.chave;
+          }
+        } while (null != atual && atual.chave.startsWith(inicio));
+        return todos;
+      }
+      
+      public boolean entreDatas(Date inicio, Date fim, Date data) {
+        return data.compareTo(inicio) >= 0 && data.compareTo(fim) <= 0;
+      }
+      
 }
