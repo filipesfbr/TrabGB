@@ -13,7 +13,7 @@ public class Teste {
 
 		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 		Scanner ler = new Scanner(System.in);
-		DateFormat data=DateFormat.getInstance();
+		DateFormat data = DateFormat.getInstance();
 
 		Programa programa = new Programa();
 		try {
@@ -22,7 +22,6 @@ public class Teste {
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}
-		
 
 		System.out.println("Digite uma opção: " + "\n1 - buscar com CPF" + "\n2 - buscar por Nome"
 				+ "\n3 - buscar por Data de Nascimento" + "\n0 - sair do programa");
@@ -36,11 +35,12 @@ public class Teste {
 				String cpfBuscado = ler.next();
 				No<String, Pessoa> cpf = programa.buscarCpf(cpfBuscado, programa.arvoreCpf);
 
-				if (cpf != null) {
+				if (cpf == null) {
+					System.out.println("CPF não encontrado!");
+				} else {
 					System.out.println("Regitro encontrado: \n");
 					System.out.println(cpf.getConteudo());
-				} else {
-					System.out.println("CPF não encontrado!");
+
 				}
 				break;
 
@@ -49,25 +49,34 @@ public class Teste {
 				String nomeBuscado = ler.next();
 				List<No<String, Pessoa>> nomes = programa.buscarTodosQueIniciamCom(nomeBuscado, programa.arvoreNome);
 
-				if (!nomes.isEmpty()) {
+				if (nomes.isEmpty()) {
+					System.out.println("Não existem dados para a busca realizada. \n");
+				} else {
 					System.out.println("Registros encontrados: \n");
 					for (No<String, Pessoa> noNomes : nomes) {
 						System.out.println(noNomes.getConteudo());
 					}
-				} else {
-					System.out.println("Não existem dados para a busca realizada.");
+
 				}
 				break;
 
 			case 3:
 				System.out.println("Digite 2 datas para uma pesquisa entre elas: ");
-				String dataInicio = ler.next();
-				String dataFinal = ler.next();
-			
-				//List<No<Date, Pessoa>> entreDatas = programa.buscarTodosEntreDatas(dataInicio, dataFinal, programa.arvoreData);
-				
+				Date dataInicio = formato.parse(ler.next());
+				Date dataFinal = formato.parse(ler.next());
+
+				List<No<Date, Pessoa>> entreDatas = programa.buscarTodosEntreDatas(dataInicio, dataFinal,
+						programa.arvoreData);
+				if (entreDatas.isEmpty()) {
+					System.out.println("Não há datas correspondente a pesquisa.");
+				} else {
+					System.out.println("Registros encontrados: \n");
+					for (No<Date, Pessoa> noEntredatas : entreDatas) {
+						System.out.println(noEntredatas.getConteudo());
+					}
+				}
 				break;
-				
+
 			default:
 				System.out.println("Digite apenas opções válidas!");
 			}
@@ -78,25 +87,5 @@ public class Teste {
 			opcao = ler.nextInt();
 		}
 
-		
-		
-		
-		//verificar o tipo de entrada no método de buscar entre datas
-		
-		
-		
-//		Long segundos = 1000L;
-//		Long minutos = 60 * segundos;
-//		Long horas = 60 * minutos;
-//		Long dias = 24 * horas;
-//		Date inicio = new Date(946692000000L); // Jan 01 2000
-//		Date fim = new Date(946692000000L + 20 * dias); // Jan 21 2000
-//		
-//		List<No<Date, Pessoa>> entreDatas = programa.buscarTodosEntreDatas(inicio, fim, programa.arvoreData);
-//		System.out.println("Temos " + entreDatas.size() + " elementos entre " + inicio + " e " + fim + ", esperamos 20.");
-//		System.out.println("Estas pessoas são: ");
-//		for (No<Date, Pessoa> noEntreDatas : entreDatas) {
-//			System.out.println(noEntreDatas.getConteudo());
-//		}
 	}
 }
